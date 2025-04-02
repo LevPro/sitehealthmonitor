@@ -1,0 +1,12 @@
+﻿# Ide's
+.vs
+.vscode
+.idea
+
+# Build results
+bin
+obj
+
+# Logs
+*.log
+*.txt

@@ -1,0 +1,20 @@
+﻿<Window x:Class="SiteHealthMonitor.Views.AddWebsiteWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModel="clr-namespace:SiteHealthMonitor.ViewModel"
+        mc:Ignorable="d"
+        Title="Настройки" SizeToContent="Height" Width="350" ResizeMode="NoResize">
+    <Window.DataContext>
+        <viewModel:WebsitesViewModel/>
+    </Window.DataContext>
+    <StackPanel Margin="30">
+        <Label>URL сайта</Label>
+        <TextBox x:Name="UrlTextBox"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button Content="Отмена" Margin="0,0,10,0" Click="CancelButton"/>
+            <Button Content="Добавить" Click="AddWebsite"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

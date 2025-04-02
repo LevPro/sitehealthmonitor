@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UseWPF>true</UseWPF>
+        <ApplicationIcon>resources\icon.ico</ApplicationIcon>
+        <NeutralLanguage>en</NeutralLanguage>
+        <PackageIcon>icon.ico</PackageIcon>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="2.0.1" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_DeploymentManifestIconFile Remove="component\resources\icon.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="resources\icon.ico" />
+      <Resource Include="resources\icon.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Views\AddWebsiteWindow.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+    </ItemGroup>
+
+</Project>
