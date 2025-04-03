@@ -4,9 +4,9 @@
              xmlns:local="clr-namespace:SiteHealthMonitor">
     <Application.Resources>
         <ContextMenu x:Key="TrayMenu">
-            <MenuItem Header="Настройки" Click="OpenSettings"/>
-            <MenuItem Header="Запустить" Click="StartMonitoring"/>
-            <MenuItem Header="Остановить" Click="StopMonitoring"/>
+            <MenuItem Header="Настройки" Click="OpenSettings" x:Name="Settings"/>
+            <MenuItem Header="Запустить" Click="StartMonitoring" x:Name="StartMonitoring"/>
+            <MenuItem Header="Остановить" Click="StopMonitoring" x:Name="StopMonitoring" Visibility="Collapsed"/>
             <Separator/>
             <MenuItem Header="Выход" Click="ExitApp"/>
         </ContextMenu>

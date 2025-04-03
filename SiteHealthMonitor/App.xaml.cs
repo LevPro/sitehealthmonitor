@@ -16,6 +16,8 @@ public partial class App : Application
     private HealthChecker? _healthChecker;
     private SettingsManager? _settings;
     private SettingsWindow? _settingsWindow;
+    private MenuItem? _startMenuItem;
+    private MenuItem? _stopMenuItem;
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -29,6 +31,15 @@ public partial class App : Application
         _healthChecker = new HealthChecker(taskbarIcon);
         
         _settings = new SettingsManager();
+        
+        var trayMenu = (ContextMenu)FindResource("TrayMenu");
+        
+        _startMenuItem = trayMenu.Items
+            .OfType<MenuItem>()
+            .FirstOrDefault(m => m.Name == "StartMonitoring");
+        _stopMenuItem = trayMenu.Items
+            .OfType<MenuItem>()
+            .FirstOrDefault(m => m.Name == "StopMonitoring");
     }
     
     private static System.Drawing.Icon LoadTrayIcon()
@@ -90,11 +101,17 @@ public partial class App : Application
             // ignored
         }
         _healthChecker!.Start(appSettings.CheckIntervalSeconds);
+        
+        _startMenuItem.Visibility = Visibility.Collapsed;
+        _stopMenuItem.Visibility = Visibility.Visible;
     }
 
     private void StopMonitoring(object sender, RoutedEventArgs e)
     {
         _healthChecker?.Stop();
+        
+        _startMenuItem.Visibility = Visibility.Visible;
+        _stopMenuItem.Visibility = Visibility.Collapsed;
     }
 
     private void ExitApp(object sender, RoutedEventArgs e)
