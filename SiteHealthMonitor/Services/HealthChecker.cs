@@ -7,6 +7,7 @@ namespace SiteHealthMonitor.Services
 {
     public class HealthChecker
     {
+        private Dictionary<string, bool> _messages = new();
         private readonly HttpClient _httpClient = new();
         private Timer? _timer;
         private bool _isRunning;
@@ -64,16 +65,27 @@ namespace SiteHealthMonitor.Services
                 if (site.IsAvailable == false)
                 {
                     ShowTrayMessage($"Сайт {site.Url} не доступен");
+                    
+                    _messages.Add(site.Url, site.IsAvailable);
+                }
+                else
+                {
+                    if (_messages.ContainsKey(site.Url))
+                    {
+                        _messages.Remove(site.Url);
+                        
+                        ShowTrayMessage($"Сайт {site.Url} снова доступен", BalloonIcon.Info);
+                    }
                 }
             }
             settManager.SaveSettings(settings);
         }
         
-        private void ShowTrayMessage(string message)
+        private void ShowTrayMessage(string message, BalloonIcon icon = BalloonIcon.Error)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                _taskbarIcon.ShowBalloonTip("Site Health Monitor", message, BalloonIcon.Warning);
+                _taskbarIcon.ShowBalloonTip("Site Health Monitor", message, icon);
             });
         }
     }
