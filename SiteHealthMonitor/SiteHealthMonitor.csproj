@@ -7,8 +7,12 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <UseWPF>true</UseWPF>
         <ApplicationIcon>resources\icon.ico</ApplicationIcon>
-        <NeutralLanguage>en</NeutralLanguage>
+        <NeutralLanguage>ru-RU</NeutralLanguage>
         <PackageIcon>icon.ico</PackageIcon>
+        <IsPackable>false</IsPackable>
+        <Company>LevPro</Company>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <FileVersion>1.0.0</FileVersion>
     </PropertyGroup>
 
     <ItemGroup>
