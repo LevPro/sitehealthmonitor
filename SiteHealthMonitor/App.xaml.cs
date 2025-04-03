@@ -1,9 +1,11 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
 using SiteHealthMonitor.Models;
 using SiteHealthMonitor.Services;
+using SiteHealthMonitor.Utilities;
 using SiteHealthMonitor.Views;
 
 namespace SiteHealthMonitor;
@@ -16,11 +18,15 @@ public partial class App : Application
     private HealthChecker? _healthChecker;
     private SettingsManager? _settings;
     private SettingsWindow? _settingsWindow;
+    private ActualVersionWindow? _actualVersionWindow;
+    private NewVersionWindow? _newVersionWindow;
     private MenuItem? _startMenuItem;
     private MenuItem? _stopMenuItem;
 
-    protected override void OnStartup(StartupEventArgs e)
+    protected override async void OnStartup(StartupEventArgs e)
     {
+        base.OnStartup(e);
+        
         var taskbarIcon = new TaskbarIcon
         {
             Icon = LoadTrayIcon(),
@@ -62,6 +68,98 @@ public partial class App : Application
             MessageBox.Show($"Error loading icon: {ex.Message}");
             return System.Drawing.SystemIcons.Application;
         }
+    }
+
+    private async void CheckUpdates(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var checker = new VersionChecker(
+                "levpro",
+                "sitehealthmonitor",
+                Assembly.GetEntryAssembly()!.GetName().Version!.ToString()
+            );
+
+            if (!await checker.IsUpdateAvailableAsync())
+            {
+                if (_actualVersionWindow != null)
+                {
+                    // Если окно скрыто - показываем снова
+                    if (!_actualVersionWindow.IsVisible)
+                    {
+                        _actualVersionWindow.Show();
+                    }
+                    _actualVersionWindow.Activate();
+                    return;
+                }
+        
+                try
+                {
+                    _actualVersionWindow = new ActualVersionWindow();
+                    _actualVersionWindow.Closed += (s, args) => 
+                    {
+                        _actualVersionWindow = null; // Важно: обнуляем ссылку при закрытии
+                    };
+        
+                    // Для обработки закрытия через системный крестик
+                    _actualVersionWindow.Closing += (s, args) => 
+                    {
+                        args.Cancel = true; // Отменяем настоящее закрытие
+                        _actualVersionWindow.Hide(); // Скрываем вместо закрытия
+                    };
+
+                    _actualVersionWindow.ShowDialog();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error opening actual version window: {ex.Message}");
+                }
+                
+                return;
+            }
+            
+            if (_newVersionWindow != null)
+            {
+                // Если окно скрыто - показываем снова
+                if (!_newVersionWindow.IsVisible)
+                {
+                    _newVersionWindow.Show();
+                }
+                _newVersionWindow.Activate();
+                return;
+            }
+        
+            try
+            {
+                _newVersionWindow = new NewVersionWindow();
+                _newVersionWindow.Closed += (s, args) => 
+                {
+                    _newVersionWindow = null; // Важно: обнуляем ссылку при закрытии
+                };
+        
+                // Для обработки закрытия через системный крестик
+                _newVersionWindow.Closing += (s, args) => 
+                {
+                    args.Cancel = true; // Отменяем настоящее закрытие
+                    _newVersionWindow.Hide(); // Скрываем вместо закрытия
+                };
+
+                _newVersionWindow.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error opening new version window: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Update check failed: {ex.Message}");
+        }
+    }
+    
+    private void AboutProgram(object sender, RoutedEventArgs e)
+    {
+        Runtime.OpenUrl("https://levpro.ru/solutions/kruglosutochnyj-monitoring-dostupnosti-sajtov");
     }
 
     private void OpenSettings(object sender, RoutedEventArgs e)
