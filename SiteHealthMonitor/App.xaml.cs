@@ -75,7 +75,6 @@ public partial class App : Application
         try
         {
             _settingsWindow = new SettingsWindow();
-            _settingsWindow.Closed += (s, args) => _settingsWindow = null;
             _settingsWindow.Closing += (s, args) =>
             {
                 args.Cancel = true;
