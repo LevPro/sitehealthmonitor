@@ -7,9 +7,8 @@ namespace SiteHealthMonitor.Services
     public class SettingsManager
     {
         private readonly string _settingsDirectory = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "LevPro",
-            "SiteHealthMonitor"
+            AppDomain.CurrentDomain.BaseDirectory,
+            "data"
         );
         
         private string _settingsFilePath;
