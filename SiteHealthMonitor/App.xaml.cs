@@ -68,23 +68,35 @@ public partial class App : Application
     {
         if (_settingsWindow != null)
         {
+            // Если окно скрыто - показываем снова
+            if (!_settingsWindow.IsVisible)
+            {
+                _settingsWindow.Show();
+            }
             _settingsWindow.Activate();
             return;
         }
-        
+
         try
         {
             _settingsWindow = new SettingsWindow();
-            _settingsWindow.Closing += (s, args) =>
+            _settingsWindow.Closed += (s, args) => 
             {
-                args.Cancel = true;
-                _settingsWindow.Hide();
+                _settingsWindow = null; // Важно: обнуляем ссылку при закрытии
             };
+        
+            // Для обработки закрытия через системный крестик
+            _settingsWindow.Closing += (s, args) => 
+            {
+                args.Cancel = true; // Отменяем настоящее закрытие
+                _settingsWindow.Hide(); // Скрываем вместо закрытия
+            };
+
             _settingsWindow.Show();
         }
         catch (Exception ex)
         {
-            throw new Exception($"Error opening settings window: {ex.Message}");
+            MessageBox.Show($"Ошибка открытия настроек: {ex.Message}");
         }
     }
 
